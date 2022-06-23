@@ -2,57 +2,45 @@ namespace World
 {
     public class City
     {
-        private string name;
+        private string? name;
 
-        private bool isCapital;
+        private City? capital;
         private double fuelCost;
 
-        private List<City> singleFuelConnections;
-        private List<City> doubleFuelConnections;
-        private Dictionary<string, double> available = new Dictionary<string, double>();
-        private Dictionary<string, double> saleMarkup = new Dictionary<string, double>();
+        private List<City> singleFuelConnections = new List<City>();
+        private List<City> doubleFuelConnections = new List<City>();
+        private Dictionary<string, double> buyingItems = new Dictionary<string, double>();
+        private Dictionary<string, double> sellingItems = new Dictionary<string, double>();
 
-        public City(string cityName, Dictionary<string, double> buying, Dictionary<string, double> selling)
+
+        public City(string cityName)
         {
             name = cityName;
-            isCapital = true;
-            singleFuelConnections = new List<City>();
-            doubleFuelConnections = new List<City>();
-            available = buying;
-            saleMarkup = selling;
-            fuelCost = available.ContainsKey("cruoil") ? 75 : 200;
-            if (name == "Karachi")
-            {
-                fuelCost = 50;
-            }
         }
 
-        public City(string cityName, bool sellsFuel)
-        {
-            name = cityName;
-            isCapital = false;
-            available = new Dictionary<string, double>();
-            saleMarkup = new Dictionary<string, double>();
-            singleFuelConnections = new List<City>();
-            doubleFuelConnections = new List<City>();
-            fuelCost = sellsFuel ? 100 : 200;
-        }
-
-        public static Dictionary<string, City> citiesFromSSV(string buyingPath, string sellingPath, string linksPath, string pricesPath)
+        private static Dictionary<string, double> getPricesFromSSV(string path)
         {
             Dictionary<string, double> startPrices = new Dictionary<string, double>();
 
-            if (!File.Exists(pricesPath))
+            if (!File.Exists(path))
             {
-                throw new FileNotFoundException(null, pricesPath);
+                throw new FileNotFoundException(null, path);
             }
 
-            StreamReader pricesReader = new StreamReader(File.OpenRead(buyingPath));
-            string[] priceValues = pricesReader.ReadLine().Split(' ');
-            for (int i = 0; i < priceValues.Length; i += 2)
+            StreamReader pricesReader = new StreamReader(File.OpenRead(path));
+
+            while (!pricesReader.EndOfStream)
             {
-                startPrices.Add(priceValues[i], Convert.ToDouble(priceValues[i + 1]));
+                string[] priceValues = pricesReader.ReadLine().Split(' ');
+                startPrices.Add(priceValues[0], Convert.ToDouble(priceValues[1]));
             }
+
+            return startPrices;
+        }
+
+        public static Dictionary<string, City> citiesFromSSV(string buyingPath, string sellingPath, string linksPath, string pricesPath, string capitalsPath)
+        {
+            var startPrices = getPricesFromSSV(pricesPath);
 
             Dictionary<string, City> output = new Dictionary<string, City>();
 
@@ -61,10 +49,6 @@ namespace World
                 throw new FileNotFoundException(null, buyingPath);
             }
             if (!File.Exists(sellingPath))
-            {
-                throw new FileNotFoundException(null, sellingPath);
-            }
-            if (!File.Exists(linksPath))
             {
                 throw new FileNotFoundException(null, sellingPath);
             }
@@ -97,16 +81,15 @@ namespace World
                     }
                 }
 
-                City tempCity;
+                City tempCity = new City(name);
+                tempCity.buyingItems = buyItemsDict;
+                tempCity.sellingItems = sellItemsDict;
+                output.Add(name, tempCity);
+            }
 
-                if (sellItemsDict.Count == 0)
-                {
-                    tempCity = new City(name, buyItemsDict["fuel"] == 1);
-                }
-                else
-                {
-                    tempCity = new City(name, buyItemsDict, sellItemsDict);
-                }
+            if (!File.Exists(linksPath))
+            {
+                throw new FileNotFoundException(null, linksPath);
             }
 
             StreamReader linksReader = new StreamReader(File.OpenRead(linksPath));
@@ -133,6 +116,19 @@ namespace World
                 }
                 output[name].singleFuelConnections = singleFuel;
                 output[name].doubleFuelConnections = doubleFuel;
+            }
+
+            if (!File.Exists(capitalsPath))
+            {
+                throw new FileNotFoundException(null, sellingPath);
+            }
+
+            StreamReader capitalsReader = new StreamReader(File.OpenRead(capitalsPath));
+            while (!capitalsReader.EndOfStream)
+            {
+                string line = capitalsReader.ReadLine();
+                string[] lineValues = line.Split(' ');
+                output[lineValues[0]].capital = output[lineValues[1]];
             }
 
             return output;
@@ -185,7 +181,7 @@ namespace World
             return fuelCost;
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return name;
         }
