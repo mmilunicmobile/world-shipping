@@ -1,0 +1,15 @@
+/Users/rick/Desktop/worldShipping/bin/Debug/net6.0/worldShipping
+/Users/rick/Desktop/worldShipping/bin/Debug/net6.0/worldShipping.deps.json
+/Users/rick/Desktop/worldShipping/bin/Debug/net6.0/worldShipping.runtimeconfig.json
+/Users/rick/Desktop/worldShipping/bin/Debug/net6.0/worldShipping.dll
+/Users/rick/Desktop/worldShipping/bin/Debug/net6.0/worldShipping.pdb
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/worldShipping.csproj.AssemblyReference.cache
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/worldShipping.GeneratedMSBuildEditorConfig.editorconfig
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/worldShipping.AssemblyInfoInputs.cache
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/worldShipping.AssemblyInfo.cs
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/worldShipping.csproj.CoreCompileInputs.cache
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/worldShipping.dll
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/refint/worldShipping.dll
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/worldShipping.pdb
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/worldShipping.genruntimeconfig.cache
+/Users/rick/Desktop/worldShipping/obj/Debug/net6.0/ref/worldShipping.dll
