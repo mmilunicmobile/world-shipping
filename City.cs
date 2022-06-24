@@ -2,7 +2,7 @@ namespace World
 {
     public class City
     {
-        private string? name;
+        private string name;
 
         private City? capital;
         private double fuelCost;
@@ -77,7 +77,7 @@ namespace World
                     sellItemsDict = new Dictionary<string, double>();
                     for (int i = 1; i < items.Length; i += 2)
                     {
-                        sellItemsDict.Add(items[i], startPrices[items[i]] * Convert.ToDouble(items[i + 1]));
+                        sellItemsDict.Add(items[i], startPrices[items[i]] * (1 + Convert.ToDouble(items[i + 1])));
                     }
                 }
 
@@ -129,6 +129,26 @@ namespace World
                 string line = capitalsReader.ReadLine();
                 string[] lineValues = line.Split(' ');
                 output[lineValues[0]].capital = output[lineValues[1]];
+            }
+
+            foreach (City city in output.Values)
+            {
+                if (city.name == "karachi")
+                {
+                    city.fuelCost = 50;
+                }
+                else if (!city.capital.buyingItems.Keys.Contains("cruoil"))
+                {
+                    city.fuelCost = 200;
+                }
+                else if (city.capital == city)
+                {
+                    city.fuelCost = 75;
+                }
+                else
+                {
+                    city.fuelCost = 100;
+                }
             }
 
             return output;
@@ -184,6 +204,19 @@ namespace World
         public override string ToString()
         {
             return name;
+        }
+
+        public string getVerboseString()
+        {
+            string output = string.Format(
+                "Name: {0}\nConnecting Cities: {1}\nBuying: {2}\nSelling:{3}\nFuel Cost: {4}",
+                name,
+                string.Join<City>(", ", getConnections()),
+                string.Join(",", buyingItems),
+                string.Join(", ", sellingItems),
+                fuelCost
+            );
+            return output;
         }
     }
 }

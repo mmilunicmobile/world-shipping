@@ -2,14 +2,16 @@ namespace World
 {
     public class Route
     {
+        private static Random rng = new Random();
         private List<City> citiesVisited = new List<City>(16);
 
         public Route(City city)
         {
-            citiesVisited[0] = city;
-            for (int i = 1; i < citiesVisited.Count; i++)
+            citiesVisited.Add(city);
+            for (int i = 1; i < 16; i++)
             {
-                citiesVisited[i] = citiesVisited[i - 1].getConnections()[0];
+                City[] possibilities = citiesVisited.Last().getConnections();
+                citiesVisited.Add(possibilities[rng.Next(possibilities.Length)]);
             }
         }
 
@@ -27,7 +29,6 @@ namespace World
 
         public bool isValid()
         {
-            int numberOfCountries = 0;
             var unique = new List<City>();
             foreach (var city in citiesVisited)
             {
