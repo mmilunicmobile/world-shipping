@@ -13,8 +13,14 @@
             );
 
             var route = new World.Route(cities.Values.ToArray());
-
-            Console.WriteLine(route.isValid());
+            Console.WriteLine("Initial Route:");
+            Console.WriteLine(route);
+            for (int i = 0; i < 10_000_000; i++)
+            {
+                route.permuteRoute();
+            }
+            Console.WriteLine("Final Route:");
+            Console.WriteLine(route);
         }
     }
 }

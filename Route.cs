@@ -5,6 +5,8 @@ namespace World
         private static Random rng = new Random();
         private List<City> citiesVisited;
 
+        private const int numberOfCities = 16;
+
         public Route(City city, bool isValid = true) :
         this(new List<City>(new[] { city }), isValid)
         { }
@@ -13,9 +15,9 @@ namespace World
         {
             do
             {
-                citiesVisited = new List<City>(16);
+                citiesVisited = new List<City>(numberOfCities);
                 citiesVisited.Add(cities[rng.Next(cities.Count)]);
-                for (int i = 1; i < 16; i++)
+                for (int i = 1; i < numberOfCities; i++)
                 {
                     City[] possibilities = citiesVisited.Last().getConnections();
                     citiesVisited.Add(possibilities[rng.Next(possibilities.Length)]);
@@ -52,7 +54,32 @@ namespace World
         {
             do
             {
-                rng.Next(citiesVisited.Count);
+                int editValue = rng.Next(numberOfCities);
+                switch (editValue)
+                {
+                    case 0:
+                        {
+                            var possibilities = citiesVisited[1].getConnections();
+                            citiesVisited[0] = possibilities[rng.Next(possibilities.Count())];
+                        }
+                        break;
+                    case numberOfCities - 1:
+                        {
+                            var possibilities = citiesVisited[numberOfCities - 2].getConnections();
+                            citiesVisited[numberOfCities - 1] = possibilities[rng.Next(possibilities.Count())];
+                        }
+                        break;
+                    default:
+                        {
+                            var possibilities = citiesVisited[editValue + 1].getSharedConnections(citiesVisited[editValue - 1]);
+                            if (possibilities.Length < 1)
+                            {
+                                continue;
+                            }
+                            citiesVisited[editValue] = possibilities[rng.Next(possibilities.Count())];
+                        }
+                        break;
+                }
 
             } while (!isValid() && validityCheck);
         }
