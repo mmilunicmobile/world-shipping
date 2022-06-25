@@ -211,14 +211,12 @@ namespace World
 
         public string getVerboseString()
         {
-            string output = string.Format(
-                "Name: {0}\nConnecting Cities: {1}\nBuying: {2}\nSelling:{3}\nFuel Cost: {4}",
-                name,
-                string.Join<City>(", ", getConnections()),
-                string.Join(",", buyingItems),
-                string.Join(", ", sellingItems),
-                fuelCost
-            );
+            string output =
+                $"Name: {name}\n"
+                + $"Connecting Cities: {string.Join<City>(", ", getConnections())}\n"
+                + $"Buying: {string.Join(",", buyingItems)}\n"
+                + $"Selling:{string.Join(", ", sellingItems)}\n"
+                + $"Fuel Cost: {fuelCost}";
             return output;
         }
     }
