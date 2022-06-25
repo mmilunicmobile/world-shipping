@@ -3,16 +3,24 @@ namespace World
     public class Route
     {
         private static Random rng = new Random();
-        private List<City> citiesVisited = new List<City>(16);
+        private List<City> citiesVisited;
 
-        public Route(City city)
+        public Route(City city, bool isValid = true) :
+        this(new List<City>(new[] { city }), isValid)
+        { }
+
+        public Route(IList<City> cities, bool isValid = true)
         {
-            citiesVisited.Add(city);
-            for (int i = 1; i < 16; i++)
+            do
             {
-                City[] possibilities = citiesVisited.Last().getConnections();
-                citiesVisited.Add(possibilities[rng.Next(possibilities.Length)]);
-            }
+                citiesVisited = new List<City>(16);
+                citiesVisited.Add(cities[rng.Next(cities.Count)]);
+                for (int i = 1; i < 16; i++)
+                {
+                    City[] possibilities = citiesVisited.Last().getConnections();
+                    citiesVisited.Add(possibilities[rng.Next(possibilities.Length)]);
+                }
+            } while (!this.isValid() && isValid);
         }
 
         public override string ToString()
@@ -29,12 +37,24 @@ namespace World
 
         public bool isValid()
         {
-            var unique = new List<City>();
+            var uniqueCapitals = new List<City>();
             foreach (var city in citiesVisited)
             {
-
+                if (!uniqueCapitals.Contains(city.capital ?? new City("defaultCapital")))
+                {
+                    uniqueCapitals.Add(city.capital ?? new City("defaultCapital"));
+                }
             }
-            return true;
+            return uniqueCapitals.Count >= 7;
+        }
+
+        public void permuteRoute(bool validityCheck = true)
+        {
+            do
+            {
+                rng.Next(citiesVisited.Count);
+
+            } while (!isValid() && validityCheck);
         }
     }
 }

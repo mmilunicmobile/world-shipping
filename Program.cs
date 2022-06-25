@@ -12,9 +12,9 @@
                 "information/captials.ssv"
             );
 
-            var route = new World.Route(cities["hanoi"]);
+            var route = new World.Route(cities.Values.ToArray());
 
-            Console.WriteLine(route);
+            Console.WriteLine(route.isValid());
         }
     }
 }

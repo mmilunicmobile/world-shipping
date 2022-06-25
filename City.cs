@@ -4,7 +4,7 @@ namespace World
     {
         private string name;
 
-        private City? capital;
+        public City? capital { get; private set; }
         private double fuelCost;
 
         private List<City> singleFuelConnections = new List<City>();
@@ -31,7 +31,7 @@ namespace World
 
             while (!pricesReader.EndOfStream)
             {
-                string[] priceValues = pricesReader.ReadLine().Split(' ');
+                string[] priceValues = pricesReader.ReadLine()!.Split(' ');
                 startPrices.Add(priceValues[0], Convert.ToDouble(priceValues[1]));
             }
 
@@ -57,34 +57,36 @@ namespace World
             StreamReader sellReader = new StreamReader(File.OpenRead(sellingPath));
             while (!buyReader.EndOfStream)
             {
-                string name;
-
                 Dictionary<string, double> buyItemsDict;
+
+                string line = buyReader.ReadLine()!;
+                string[] items = line.Split(' ');
+                string name = items[0];
+                buyItemsDict = new Dictionary<string, double>();
+                for (int i = 1; i < items.Length; i++)
                 {
-                    string line = buyReader.ReadLine();
-                    string[] items = line.Split(' ');
-                    name = items[0];
-                    buyItemsDict = new Dictionary<string, double>();
-                    for (int i = 1; i < items.Length; i++)
-                    {
-                        buyItemsDict.Add(items[i], startPrices[items[i]]);
-                    }
-                }
-                Dictionary<string, double> sellItemsDict;
-                {
-                    string line = sellReader.ReadLine();
-                    string[] items = line.Split(' ');
-                    sellItemsDict = new Dictionary<string, double>();
-                    for (int i = 1; i < items.Length; i += 2)
-                    {
-                        sellItemsDict.Add(items[i], startPrices[items[i]] * (1 + Convert.ToDouble(items[i + 1])));
-                    }
+                    buyItemsDict.Add(items[i], startPrices[items[i]]);
                 }
 
                 City tempCity = new City(name);
                 tempCity.buyingItems = buyItemsDict;
-                tempCity.sellingItems = sellItemsDict;
                 output.Add(name, tempCity);
+            }
+
+            while (!sellReader.EndOfStream)
+            {
+                Dictionary<string, double> sellItemsDict;
+
+                string line = sellReader.ReadLine()!;
+                string[] items = line.Split(' ');
+                string name = items[0];
+                sellItemsDict = new Dictionary<string, double>();
+                for (int i = 1; i < items.Length; i += 2)
+                {
+                    sellItemsDict.Add(items[i], startPrices[items[i]] * (1 + Convert.ToDouble(items[i + 1])));
+                }
+
+                output[name].sellingItems = sellItemsDict;
             }
 
             if (!File.Exists(linksPath))
@@ -95,7 +97,7 @@ namespace World
             StreamReader linksReader = new StreamReader(File.OpenRead(linksPath));
             while (!linksReader.EndOfStream)
             {
-                string line = linksReader.ReadLine();
+                string line = linksReader.ReadLine()!;
                 List<string> lineValues = new List<string>(line.Split(' '));
                 string name = lineValues[0];
                 lineValues.RemoveAt(0);
@@ -126,7 +128,7 @@ namespace World
             StreamReader capitalsReader = new StreamReader(File.OpenRead(capitalsPath));
             while (!capitalsReader.EndOfStream)
             {
-                string line = capitalsReader.ReadLine();
+                string line = capitalsReader.ReadLine()!;
                 string[] lineValues = line.Split(' ');
                 output[lineValues[0]].capital = output[lineValues[1]];
             }
@@ -137,7 +139,7 @@ namespace World
                 {
                     city.fuelCost = 50;
                 }
-                else if (!city.capital.buyingItems.Keys.Contains("cruoil"))
+                else if (!(city.capital ?? new City("")).buyingItems.Keys.Contains("cruoil"))
                 {
                     city.fuelCost = 200;
                 }
@@ -153,6 +155,7 @@ namespace World
 
             return output;
         }
+
         public City[] getSharedConnections(City other)
         {
             List<City> output = new List<City>();
