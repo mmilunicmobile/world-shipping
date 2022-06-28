@@ -93,13 +93,15 @@ namespace World
             } while (!isValid() && validityCheck);
         }
 
-        public double calculateRouteProfit()
+        private Tuple<List<List<Purchase>>, List<double>> calculateOptimalRoutePayments()
         {
+            var purchases = new List<List<Purchase>>(new List<Purchase>[numberOfCities]);
+            for (int i = 0; i < purchases.Count; i++)
+            {
+                purchases[i] = new List<Purchase>();
+            }
 
-
-            var purchases = new List<List<Purchase>>();
-
-            List<double> budgetList = new List<double>();
+            List<double> budgetList = new List<double>(new double[numberOfCities]);
 
             for (int i = 0; i < budgetList.Count; i++)
             {
@@ -125,7 +127,12 @@ namespace World
                     slotsFilled += optimalPurchase.length!.Value;
                 }
             }
-            return budgetList.Last();
+            return new Tuple<List<List<Purchase>>, List<double>>(purchases, budgetList);
+        }
+
+        public double calculateOptimalProfit()
+        {
+            return calculateOptimalRoutePayments().Item2.Last();
         }
     }
 }

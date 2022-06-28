@@ -36,7 +36,7 @@ namespace World
                 select i;
             var unusedPossibilites =
                 from i in possibilities
-                where !exclusions.Any(temp => temp.good == i.good)
+                where !exclusions.Any(temp => temp == null ? false : temp.good == i.good)
                 select i;
             if (unusedPossibilites.Count() <= 0)
             {

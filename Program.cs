@@ -21,6 +21,7 @@
             }
             Console.WriteLine("Final Route:");
             Console.WriteLine(route);
+            Console.WriteLine(route.calculateOptimalProfit());
 
             route.main();
         }
