@@ -37,15 +37,6 @@ namespace World
             return output;
         }
 
-        public void main()
-        {
-            var a = citiesVisited[0].getSortedPurchasePairs(citiesVisited[1]);
-            foreach (var i in a)
-            {
-                Console.WriteLine(i);
-            }
-        }
-
         public bool isValid()
         {
             var uniqueCapitals = new List<City>();
@@ -114,7 +105,7 @@ namespace World
                 int numberOfCrates = slotSection == 2 ? 2 : 4;
                 while (slotsFilled < numberOfCities - 1)
                 {
-                    var optimalPurchase = Purchase.getOptimizedPurchasesFromCities(citiesVisited, purchases, budgetList, slotsFilled, numberOfCrates);
+                    var optimalPurchase = Purchase.getOptimizedPurchasesFromCities(citiesVisited, purchases, budgetList, slotsFilled, numberOfCrates, slotSection);
                     purchases[slotsFilled].Add(optimalPurchase);
                     for (int i = slotsFilled; i < budgetList.Count; i++)
                     {
@@ -133,6 +124,39 @@ namespace World
         public double calculateOptimalProfit()
         {
             return calculateOptimalRoutePayments().Item2.Last();
+        }
+
+        public List<List<Purchase>> getBestPurchasePath()
+        {
+            return calculateOptimalRoutePayments().Item1;
+        }
+
+        public string purchasePathToString()
+        {
+            var optimalRoutePurchases = calculateOptimalRoutePayments();
+            var money = optimalRoutePurchases.Item2;
+            var purchases = optimalRoutePurchases.Item1;
+            string[] strings = new string[numberOfCities];
+
+            for (int i = 0; i < purchases.Count; i++)
+            {
+                for (int j = 0; j < purchases[i].Count; i++)
+                {
+                    var purch = purchases[i][j];
+                    strings[i] += purch.getBuyString() + ", ";
+                    strings[i + purch.length!.Value] += purch.getSellString() + ", ";
+                }
+            }
+
+            string output = "";
+
+            for (var i = 0; i < money.Count; i++)
+            {
+                output += $"Day {i}, ${money[i]}, {strings[i]}\n";
+            }
+
+            return output;
+
         }
     }
 }

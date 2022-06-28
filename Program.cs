@@ -12,18 +12,27 @@
                 "information/captials.ssv"
             );
 
-            var route = new World.Route(cities.Values.ToArray());
-            Console.WriteLine("Initial Route:");
-            Console.WriteLine(route);
-            for (int i = 0; i < 1000; i++)
-            {
-                route.permuteRoute();
-            }
-            Console.WriteLine("Final Route:");
-            Console.WriteLine(route);
-            Console.WriteLine(route.calculateOptimalProfit());
+            World.Route bestRoute = null!;
+            double bestProfit = -1;
 
-            route.main();
+            Console.WriteLine("Permuting...");
+
+            for (int i = 0; i < 1000000; i++)
+            {
+                var route = new World.Route(cities.Values.ToArray());
+                double profit = route.calculateOptimalProfit();
+                if (bestProfit <= profit)
+                {
+                    bestRoute = route;
+                    bestProfit = profit;
+                    Console.WriteLine(profit);
+                }
+            }
+
+            Console.WriteLine("Best Route:");
+            Console.WriteLine(bestRoute);
+            Console.WriteLine($"Profit: {bestProfit}");
+            Console.WriteLine(bestRoute.purchasePathToString());
         }
     }
 }

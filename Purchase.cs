@@ -19,6 +19,8 @@ namespace World
         private City endingCity;
         private string good;
 
+        private int? slot;
+
         public double profit
         {
             get
@@ -27,7 +29,7 @@ namespace World
             }
         }
 
-        public static Purchase getOptimizedPurchase(City a, City b, List<Purchase> exclusions, double budget, int length)
+        public static Purchase getOptimizedPurchase(City a, City b, List<Purchase> exclusions, double budget, int length, int? slot)
         {
             var possibilities = a.getSortedPurchasePairs(b);
             var budgetedPossibilities =
@@ -40,7 +42,7 @@ namespace World
                 select i;
             if (unusedPossibilites.Count() <= 0)
             {
-                return new Purchase(a, b, 0, 0, "nothing", length);
+                return new Purchase(a, b, 0, 0, "nothing", length, slot);
             }
             var finalPurchase = unusedPossibilites.First();
             finalPurchase.length = length;
@@ -52,7 +54,8 @@ namespace World
             List<List<Purchase>> exclusions,
             List<double> budget,
             int startingPos,
-            int numberOfCrates
+            int numberOfCrates,
+            int slot
         )
         {
             Purchase? a1 = null, b1 = null, c1 = null, a2 = null, b2 = null, a3 = null;
@@ -64,7 +67,8 @@ namespace World
                     cities[startingPos + end],
                     exclusions[startingPos + start],
                     budget.GetRange(startingPos + start, end - start).Min() / numberOfCrates,
-                    end - start
+                    end - start,
+                    slot
                 );
             };
 
@@ -111,7 +115,7 @@ namespace World
             }
         }
 
-        public Purchase(City a, City b, double costInitial, double sellingPrice, string good, int? length)
+        public Purchase(City a, City b, double costInitial, double sellingPrice, string good, int? length, int? slot)
         {
             startingCity = a;
             endingCity = b;
@@ -119,6 +123,7 @@ namespace World
             this.sellingPrice = sellingPrice;
             this.good = good;
             this.length = length;
+            this.slot = slot;
         }
 
         public static int CompareByProfit(Purchase a, Purchase b)
@@ -136,6 +141,15 @@ namespace World
             {
                 return 0;
             }
+        }
+
+        public string getBuyString()
+        {
+            return $"buy {(slot == 2 ? 2 : 4)} {good}";
+        }
+        public string getSellString()
+        {
+            return $"sell {(slot == 2 ? 2 : 4)} {good}";
         }
     }
 }

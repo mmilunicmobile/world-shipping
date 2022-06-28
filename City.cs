@@ -230,7 +230,7 @@ namespace World
             {
                 if (selling.ContainsKey(i))
                 {
-                    output.Add(new Purchase(this, other, buying[i], selling[i], i, null));
+                    output.Add(new Purchase(this, other, buying[i], selling[i], i, null, null));
                 }
             }
 
