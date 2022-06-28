@@ -219,48 +219,31 @@ namespace World
             return output;
         }
 
-        public List<Tuple<string, double, double>> getSortedPurchasePairs(City other)
+        public List<Purchase> getSortedPurchasePairs(City other)
         {
             var buying = buyingItems;
             var selling = other.sellingItems;
 
-            var output = new List<Tuple<string, double, double>>();
+            var output = new List<Purchase>();
 
             foreach (var i in buying.Keys)
             {
                 if (selling.ContainsKey(i))
                 {
-                    output.Add(new Tuple<string, double, double>(i, buying[i], selling[i]));
+                    output.Add(new Purchase(this, other, buying[i], selling[i], i, null));
                 }
             }
 
-            output.Sort(CompareDealsByProfit);
+            output.Sort(Purchase.CompareByProfit);
 
             output.Reverse();
 
             return output;
         }
 
-        public static List<Tuple<string, double, double>> getSortedPurchasePairs(City buying, City selling)
+        public static List<Purchase> getSortedPurchasePairs(City buying, City selling)
         {
             return selling.getSortedPurchasePairs(buying);
-        }
-
-        private static int CompareDealsByProfit(Tuple<string, double, double> a, Tuple<string, double, double> b)
-        {
-            var newVal = (a.Item3 - a.Item2) - (b.Item3 - b.Item2);
-            if (newVal > 0)
-            {
-                return 1;
-            }
-            else if (newVal < 0)
-            {
-                return -1;
-            }
-            else
-            {
-                return 0;
-            }
         }
     }
 }

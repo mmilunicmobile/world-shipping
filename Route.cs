@@ -92,5 +92,40 @@ namespace World
 
             } while (!isValid() && validityCheck);
         }
+
+        public double calculateRouteProfit()
+        {
+
+
+            var purchases = new List<List<Purchase>>();
+
+            List<double> budgetList = new List<double>();
+
+            for (int i = 0; i < budgetList.Count; i++)
+            {
+                budgetList[i] = 3000;
+            }
+
+            for (int slotSection = 0; slotSection < 3; slotSection++)
+            {
+                int slotsFilled = 0;
+                int numberOfCrates = slotSection == 2 ? 2 : 4;
+                while (slotsFilled < numberOfCities - 1)
+                {
+                    var optimalPurchase = Purchase.getOptimizedPurchasesFromCities(citiesVisited, purchases, budgetList, slotsFilled, numberOfCrates);
+                    purchases[slotsFilled].Add(optimalPurchase);
+                    for (int i = slotsFilled; i < budgetList.Count; i++)
+                    {
+                        budgetList[i] -= optimalPurchase.costInitial * numberOfCrates;
+                    }
+                    for (int i = slotsFilled + optimalPurchase.length!.Value; i < budgetList.Count; i++)
+                    {
+                        budgetList[i] += optimalPurchase.sellingPrice * numberOfCrates;
+                    }
+                    slotsFilled += optimalPurchase.length!.Value;
+                }
+            }
+            return budgetList.Last();
+        }
     }
 }
