@@ -37,7 +37,7 @@ namespace World
                 where i.costInitial <= budget
                 select i;
             var unusedPossibilites =
-                from i in possibilities
+                from i in budgetedPossibilities
                 where !exclusions.Any(temp => temp == null ? false : temp.good == i.good)
                 select i;
             if (unusedPossibilites.Count() <= 0)

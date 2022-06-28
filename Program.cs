@@ -17,7 +17,7 @@
 
             Console.WriteLine("Permuting...");
 
-            for (int i = 0; i < 1000000; i++)
+            for (int i = 0; i < 100000; i++)
             {
                 var route = new World.Route(cities.Values.ToArray());
                 double profit = route.calculateOptimalProfit();
