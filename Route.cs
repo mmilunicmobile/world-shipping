@@ -37,6 +37,15 @@ namespace World
             return output;
         }
 
+        public void main()
+        {
+            var a = citiesVisited[0].getSortedPurchasePairs(citiesVisited[1]);
+            foreach (var i in a)
+            {
+                Console.WriteLine(i);
+            }
+        }
+
         public bool isValid()
         {
             var uniqueCapitals = new List<City>();

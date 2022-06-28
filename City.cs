@@ -12,7 +12,6 @@ namespace World
         private Dictionary<string, double> buyingItems = new Dictionary<string, double>();
         private Dictionary<string, double> sellingItems = new Dictionary<string, double>();
 
-
         public City(string cityName)
         {
             name = cityName;
@@ -218,6 +217,50 @@ namespace World
                 + $"Selling:{string.Join(", ", sellingItems)}\n"
                 + $"Fuel Cost: {fuelCost}";
             return output;
+        }
+
+        public List<Tuple<string, double, double>> getSortedPurchasePairs(City other)
+        {
+            var buying = buyingItems;
+            var selling = other.sellingItems;
+
+            var output = new List<Tuple<string, double, double>>();
+
+            foreach (var i in buying.Keys)
+            {
+                if (selling.ContainsKey(i))
+                {
+                    output.Add(new Tuple<string, double, double>(i, buying[i], selling[i]));
+                }
+            }
+
+            output.Sort(CompareDealsByProfit);
+
+            output.Reverse();
+
+            return output;
+        }
+
+        public static List<Tuple<string, double, double>> getSortedPurchasePairs(City buying, City selling)
+        {
+            return selling.getSortedPurchasePairs(buying);
+        }
+
+        private static int CompareDealsByProfit(Tuple<string, double, double> a, Tuple<string, double, double> b)
+        {
+            var newVal = (a.Item3 - a.Item2) - (b.Item3 - b.Item2);
+            if (newVal > 0)
+            {
+                return 1;
+            }
+            else if (newVal < 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }
