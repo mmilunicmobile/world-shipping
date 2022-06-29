@@ -42,10 +42,11 @@ namespace World
                 select i;
             if (unusedPossibilites.Count() <= 0)
             {
-                return new Purchase(a, b, 0, 0, "nothing", length, slot);
+                return new EmptyPurchase(a, b, length, slot);
             }
             var finalPurchase = unusedPossibilites.First();
             finalPurchase.length = length;
+            finalPurchase.slot = slot;
             return finalPurchase;
         }
 
@@ -143,13 +144,28 @@ namespace World
             }
         }
 
-        public string getBuyString()
+        public virtual string getBuyString()
         {
-            return $"buy {(slot == 2 ? 2 : 4)} {good}";
+            return $"buy {(slot == 2 ? 2 : 4)} {good}, ";
         }
-        public string getSellString()
+        public virtual string getSellString()
         {
-            return $"sell {(slot == 2 ? 2 : 4)} {good}";
+            return $"sell {(slot == 2 ? 2 : 4)} {good}, ";
+        }
+
+        private class EmptyPurchase : Purchase
+        {
+            public EmptyPurchase(City a, City b, int? length, int? slot) : base(a, b, 0, 0, "nothing", length, slot) { }
+            public override string getBuyString()
+            {
+                return "";
+            }
+
+            public override string getSellString()
+            {
+                return "";
+            }
         }
     }
+
 }

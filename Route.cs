@@ -25,6 +25,11 @@ namespace World
             } while (!this.isValid() && isValid);
         }
 
+        public Route(Route other)
+        {
+            citiesVisited = new List<City>(other.citiesVisited);
+        }
+
         public override string ToString()
         {
             string output = "";
@@ -84,6 +89,18 @@ namespace World
             } while (!isValid() && validityCheck);
         }
 
+        public void permuteRouteMonteCarlo(double probabilityOfNegativeKeep = 0.5, bool validityCheck = true)
+        {
+            var originalRoute = new List<City>(citiesVisited);
+            var originalProfit = calculateOptimalProfit();
+            permuteRoute(validityCheck);
+            if (calculateOptimalProfit() > originalProfit || rng.NextDouble() < probabilityOfNegativeKeep)
+            { }
+            else
+            {
+                citiesVisited = originalRoute;
+            }
+        }
         private Tuple<List<List<Purchase>>, List<double>> calculateOptimalRoutePayments()
         {
             var purchases = new List<List<Purchase>>(new List<Purchase>[numberOfCities]);
@@ -97,6 +114,15 @@ namespace World
             for (int i = 0; i < budgetList.Count; i++)
             {
                 budgetList[i] = 3000;
+            }
+
+            {
+                int cheapestFuelIndex = getCheapestFuelInTimeCityIndex();
+                double cheapestFuelTotalCost = citiesVisited[cheapestFuelIndex].getFuelCost() * (getFuelNumber() - 10);
+                for (int i = cheapestFuelIndex; i < budgetList.Count; i++)
+                {
+                    budgetList[i] -= cheapestFuelTotalCost;
+                }
             }
 
             for (int slotSection = 0; slotSection < 3; slotSection++)
@@ -140,23 +166,50 @@ namespace World
 
             for (int i = 0; i < purchases.Count; i++)
             {
-                for (int j = 0; j < purchases[i].Count; i++)
+                for (int j = 0; j < purchases[i].Count; j++)
                 {
                     var purch = purchases[i][j];
-                    strings[i] += purch.getBuyString() + ", ";
-                    strings[i + purch.length!.Value] += purch.getSellString() + ", ";
+                    strings[i] += purch.getBuyString();
+                    strings[i + purch.length!.Value] += purch.getSellString();
                 }
             }
+
+            int cheapFuelIndex = getCheapestFuelInTimeCityIndex();
+            strings[cheapFuelIndex] += $"buy {getFuelNumber() - 10} fuel for ${(getFuelNumber() - 10) * citiesVisited[cheapFuelIndex].getFuelCost()}, ";
 
             string output = "";
 
             for (var i = 0; i < money.Count; i++)
             {
-                output += $"Day {i}, ${money[i]}, {strings[i]}\n";
+                output += $"Day {i + 1}, End Balance ${money[i]}, {strings[i]}\n";
             }
 
             return output;
 
+        }
+
+        public int getFuelNumber()
+        {
+            int output = 0;
+            for (int i = 0; i < numberOfCities - 1; i++)
+            {
+                output += citiesVisited[i].connectionFuelCost(citiesVisited[i + 1]);
+            }
+            return output;
+        }
+
+        public int getCheapestFuelInTimeCityIndex()
+        {
+            int citiesWithBaseFuel = 0;
+            int fuelRemaining = 10;
+            do
+            {
+                citiesWithBaseFuel++;
+                fuelRemaining -= citiesVisited[citiesWithBaseFuel].connectionFuelCost(citiesVisited[citiesWithBaseFuel + 1]);
+            } while (fuelRemaining >= 0);
+            citiesWithBaseFuel--;
+            var sortedCities = new List<City>(citiesVisited.GetRange(0, citiesWithBaseFuel));
+            return sortedCities.LastIndexOf(sortedCities.MinBy(temp => temp.getFuelCost())!);
         }
     }
 }
