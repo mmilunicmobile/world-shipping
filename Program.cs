@@ -4,6 +4,8 @@
     {
         static void Main(string[] args)
         {
+            System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+
             var cities = World.City.citiesFromSSV(
                 "information/buying.ssv",
                 "information/selling.ssv",
@@ -17,23 +19,9 @@
             var route = new World.Route(cities.Values.ToArray());
             Console.WriteLine("Randomizing...");
 
-            for (int i = 0; i < 50000; i++)
+            while (sw.Elapsed.TotalHours < 6)
             {
                 route = new World.Route(cities.Values.ToArray());
-                double profit = route.calculateOptimalProfit();
-                if (bestProfit < profit)
-                {
-                    bestRoute = new World.Route(route);
-                    bestProfit = profit;
-                    Console.WriteLine(profit);
-                }
-            }
-
-            route = new World.Route(bestRoute);
-            Console.WriteLine("Permuting...");
-            for (int i = 0; i < 50000; i++)
-            {
-                route.permuteRouteMonteCarlo(0.3);
                 double profit = route.calculateOptimalProfit();
                 if (bestProfit < profit)
                 {
