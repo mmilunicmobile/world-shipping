@@ -1,0 +1,44 @@
+Randomizing...
+5195
+5965
+6690
+7270
+7710
+8120
+8330
+8470
+8545
+8640
+9000
+9155
+9165
+9185
+9240
+9350
+9405
+9625
+9670
+9875
+10035
+10150
+Best Route:
+paris -> rome -> paris -> london -> paris -> rome -> paris -> london -> paris -> rome -> banzart -> cairo -> ankara -> volgograd -> moscow -> beijing
+Profit: 10150
+Day 1, End Balance $0, buy 4 cons, buy 4 pharm, buy 2 iron, 
+Day 2, End Balance $2280, sell 4 cons, sell 4 pharm, sell 2 iron, buy 4 food, 
+Day 3, End Balance $80, buy 4 cons, buy 2 pharm, 
+Day 4, End Balance $1330, sell 4 food, sell 4 cons, buy 4 cruoil, buy 10 fuel for $750, 
+Day 5, End Balance $930, sell 4 cruoil, buy 4 cons, buy 4 pharm, 
+Day 6, End Balance $3750, sell 2 pharm, sell 4 cons, sell 4 pharm, buy 4 food, 
+Day 7, End Balance $1550, buy 4 cons, buy 2 pharm, 
+Day 8, End Balance $3550, sell 4 food, sell 4 cons, buy 4 cruoil, 
+Day 9, End Balance $3150, sell 4 cruoil, buy 4 cons, buy 4 pharm, 
+Day 10, End Balance $6370, sell 2 pharm, sell 4 cons, sell 4 pharm, buy 4 chem, 
+Day 11, End Balance $6370, 
+Day 12, End Balance $4410, sell 4 chem, buy 4 cot, buy 4 food, buy 2 cruoil, 
+Day 13, End Balance $4550, sell 4 cot, sell 2 cruoil, buy 4 food, buy 2 trans, 
+Day 14, End Balance $4550, 
+Day 15, End Balance $5910, sell 4 food, sell 4 food, sell 2 trans, buy 4 chem, buy 4 cruoil, buy 2 min, 
+Day 16, End Balance $10150, sell 4 chem, sell 4 cruoil, sell 2 min, 
+
+10150
